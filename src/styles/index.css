@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Custom base variables --- */
+@layer base {
+  :root {
+    /* Core Colors */
+    --color-background: #FAFBFC;
+    --color-foreground: #1C1C1C;
+    --color-border: #E5E7EB;
+    --color-input: #F3F4F6;
+    --color-ring: #D4AF37;
+
+    /* Card Colors */
+    --color-card: #FFFFFF;
+    --color-card-foreground: #1C1C1C;
+
+    /* Popover Colors */
+    --color-popover: #FFFFFF;
+    --color-popover-foreground: #1C1C1C;
+
+    /* Muted Colors */
+    --color-muted: #F5F5F4;
+    --color-muted-foreground: #78716C;
+
+    /* Primary Colors - Anthracite */
+    --color-primary: #2C2C2C;
+    --color-primary-foreground: #FFFFFF;
+
+    /* Secondary Colors - Gold */
+    --color-secondary: #D4AF37;
+    --color-secondary-foreground: #1C1C1C;
+
+    /* Accent Colors - Muted Gold */
+    --color-accent: #C5A572;
+    --color-accent-foreground: #1C1C1C;
+
+    /* Destructive Colors */
+    --color-destructive: #DC2626;
+    --color-destructive-foreground: #FFFFFF;
+
+    /* Success Colors */
+    --color-success: #16A34A;
+    --color-success-foreground: #FFFFFF;
+
+    /* Warning Colors */
+    --color-warning: #EA580C;
+    --color-warning-foreground: #FFFFFF;
+
+    /* Error Colors */
+    --color-error: #DC2626;
+    --color-error-foreground: #FFFFFF;
+
+    /* Stone Scale for Neutrals */
+    --color-stone-50: #FAFAF9;
+    --color-stone-100: #F5F5F4;
+    --color-stone-200: #E7E5E4;
+    --color-stone-300: #D6D3D1;
+    --color-stone-400: #A8A29E;
+    --color-stone-500: #78716C;
+    --color-stone-600: #57534E;
+    --color-stone-700: #44403C;
+    --color-stone-800: #292524;
+    --color-stone-900: #1C1917;
+  }
+}
+
+/* --- Utilities --- */
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .delay-100 { transition-delay: 0.1s; }
+  .delay-200 { transition-delay: 0.2s; }
+  .delay-300 { transition-delay: 0.3s; }
+  .delay-500 { transition-delay: 0.5s; }
+  .delay-700 { transition-delay: 0.7s; }
+
+  .text-reveal-wrapper {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  .text-reveal-content {
+    transform: translateY(110%);
+    opacity: 0;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+    display: block;
+  }
+
+  .reveal-active .text-reveal-content {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .rounded-organic-sm { border-radius: 30px; }
+  .rounded-organic-md { border-radius: 40px; }
+  .rounded-organic-lg { border-radius: 60px; }
+
+  .gold-glow { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+
+  .grayscale-hover {
+    filter: grayscale(100%);
+    transition: filter 0.7s ease;
+  }
+  .grayscale-hover:hover { filter: grayscale(0%); }
+
+  html { scroll-behavior: smooth; }
+
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .parallax-element { will-change: transform; }
+}
+
+/* --- Animations (plain CSS, OK) --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes slideInFromRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.animate-fade-in { animation: fadeIn 0.5s ease-out; }
+.animate-slide-up { animation: slideUp 0.6s ease-out; }
+.animate-slide-in-right { animation: slideInFromRight 0.5s ease-out; }
+.animate-scale-in { animation: scaleIn 0.4s ease-out; }
+.animate-pulse-slow { animation: pulse 2s ease-in-out infinite; }
