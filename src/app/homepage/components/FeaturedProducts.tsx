@@ -56,14 +56,6 @@ const featuredProducts: Product[] = [
     alt: 'Altın zincir bileklik, sarı altın, el üzerinde',
   },
   {
-    id: 'prod_6',
-    name: 'Yakut Yüzük',
-    category: 'Yüzük',
-    tag: 'özel tasarım',
-    image: 'https://images.unsplash.com/photo-1689775703915-d1dce4e4fc80',
-    alt: 'Yakut taşlı yüzük, beyaz altın, klasik dizayn',
-  },
-  {
     id: 'prod_8',
     name: 'Elmas Kolye',
     category: 'Kolye',

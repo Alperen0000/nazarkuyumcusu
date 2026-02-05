@@ -41,7 +41,7 @@ export default function Header() {
       {/* Gold accent line */}
       <div className="h-1 bg-gradient-to-r from-secondary via-accent to-secondary" />
 
-      <div className="max-w-container mx-auto px-6 py-4">
+      <div className="max-w-container mx-auto px-3 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/homepage" className="flex items-center gap-2 group">

@@ -25,7 +25,7 @@ export default function HeroSection() {
       </div>
 
       {/* Floating Info Card (Desktop) */}
-      <div className="hidden md:block absolute top-24 right-12 bg-white p-8 rounded-organic-md w-80 shadow-2xl z-20 animate-slide-in-right">
+      <div className="hidden md:block absolute top-24 right-2 bg-white p-8 rounded-organic-md w-80 shadow-2xl z-20 animate-slide-in-right">
         <div className="flex items-start justify-between mb-6">
           <h3 className="text-lg font-playfair font-bold text-primary leading-tight">
             Mağaza Bilgileri
@@ -53,7 +53,7 @@ export default function HeroSection() {
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 max-w-container mx-auto px-6 py-24 md:py-32 flex flex-col justify-end min-h-[90vh]">
+      <div className="relative z-10 max-w-container mx-auto px-3 py-24 md:py-32 flex flex-col justify-end min-h-[90vh]">
         <div className={`${isRevealed ? 'reveal-active' : ''}`}>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-playfair font-bold text-white leading-none mb-6">
             <span className="text-reveal-wrapper">

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import '@/styles/index.css';
 import { Inter, Playfair_Display } from 'next/font/google';
+import '@/styles/index.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -17,15 +17,12 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: 'Nazar Kuyumculuk',
   description: 'Görele/Giresun - Nazar Kuyumculuk',
-  icons: {
-    icon: '/favicon.ico',
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="bg-background text-foreground antialiased font-inter">
+      <body className="font-inter antialiased bg-background text-foreground">
         {children}
       </body>
     </html>
