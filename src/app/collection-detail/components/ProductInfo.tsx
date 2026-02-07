@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
 
 interface ProductAttribute {
@@ -43,6 +42,10 @@ export default function ProductInfo({
     }
     window.open(url, '_blank');
   };
+
+  const whatsappCtaUrl = `https://wa.me/905306052800?text=${encodeURIComponent(
+    `Merhaba, ${name} ürünü hakkında bilgi almak istiyorum.`
+  )}`;
 
   return (
     <div className="space-y-8">
@@ -91,13 +94,16 @@ export default function ProductInfo({
           <Icon name="PhoneIcon" size={20} />
           Bizi Arayın
         </a>
-        <Link
-          href="/contact"
+
+        <a
+          href={whatsappCtaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex-1 flex items-center justify-center gap-2 px-8 py-4 border-2 border-primary text-primary rounded-full font-medium hover:bg-primary hover:text-primary-foreground transition-all"
         >
-          <Icon name="EnvelopeIcon" size={20} />
-          İletişim Formu
-        </Link>
+          <Icon name="ChatBubbleLeftRightIcon" size={20} />
+          WhatsApp’tan Yazın
+        </a>
       </div>
 
       {/* Accordions */}

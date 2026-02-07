@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Header from '@/components/common/Header';
+import WhatsAppButton from '@/components/common/WhatsAppButton';
 import Footer from '@/components/common/Footer';
 import Icon from '@/components/ui/AppIcon';
 
@@ -328,6 +329,7 @@ export default function PoliciesPage() {
           </div>
         </div>
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   );

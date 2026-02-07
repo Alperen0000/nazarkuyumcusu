@@ -1,32 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
 export default function WhatsAppButton() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsVisible(window.scrollY > 300);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const whatsappMessage = encodeURIComponent(
     'Merhaba, Nazar Kuyumculuk hakkında bilgi almak istiyorum.'
   );
-  const whatsappUrl = `https://wa.me/905301234567?text=${whatsappMessage}`;
+
+  // +90 530 605 28 00
+  const whatsappUrl = `https://wa.me/905306052800?text=${whatsappMessage}`;
 
   return (
     <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
-      }`}
+      className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300"
       aria-label="WhatsApp ile iletişime geç"
     >
       <svg

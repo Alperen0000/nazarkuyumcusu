@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Header from '@/components/common/Header';
+import WhatsAppButton from '@/components/common/WhatsAppButton';
 import Footer from '@/components/common/Footer';
 import HeroSection from './components/HeroSection';
 import CategoryCards from './components/CategoryCards';
@@ -32,6 +33,7 @@ export default function Homepage() {
         <CustomerReviews />
         <StoreInfo />
       </main>
+      <WhatsAppButton />
       <Footer />
     </>
   );
