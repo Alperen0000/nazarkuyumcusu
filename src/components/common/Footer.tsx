@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
+import NazarBeadIcon from '@/components/ui/NazarBeadIcon';
 
 export default function Footer() {
   const infoLinks = [
@@ -19,8 +20,8 @@ export default function Footer() {
           {/* Column 1: Brand & Contact */}
           <div className="col-span-1 md:col-span-6">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
-                <Icon name="SparklesIcon" size={20} className="text-primary" />
+              <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+                <NazarBeadIcon className="w-10 h-10" />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-playfair font-bold">Nazar</span>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
+import NazarBeadIcon from '@/components/ui/NazarBeadIcon';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,8 +46,8 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/homepage" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-              <Icon name="SparklesIcon" size={20} className="text-secondary" />
+            <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+              <NazarBeadIcon className="w-10 h-10" />
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-playfair font-bold text-primary tracking-tight">
