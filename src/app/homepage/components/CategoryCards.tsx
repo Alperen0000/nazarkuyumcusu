@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
 
 interface Category {
@@ -13,46 +14,25 @@ interface Category {
 
 const categories: Category[] = [
   {
-    id: 'cat_alyans',
-    name: 'Alyans',
-    icon: 'HeartIcon',
-    href: '/collections?category=alyans',
-    description: 'Evlilik ve nişan alyansları',
-  },
-  {
-    id: 'cat_yuzuk',
+    id: 'yuzuk',
     name: 'Yüzük',
     icon: 'SparklesIcon',
-    href: '/collections?category=yuzuk',
+    href: '/collections/yuzuk',
     description: 'Taşlı ve sade yüzükler',
   },
   {
-    id: 'cat_kolye',
+    id: 'kolye',
     name: 'Kolye',
     icon: 'StarIcon',
-    href: '/collections?category=kolye',
+    href: '/collections/kolye',
     description: 'Zarif kolye modelleri',
   },
   {
-    id: 'cat_bileklik',
+    id: 'bileklik',
     name: 'Bileklik',
     icon: 'LinkIcon',
-    href: '/collections?category=bileklik',
+    href: '/collections/bileklik',
     description: 'Şık bileklik çeşitleri',
-  },
-  {
-    id: 'cat_kupe',
-    name: 'Küpe',
-    icon: 'CircleStackIcon',
-    href: '/collections?category=kupe',
-    description: 'Klasik ve modern küpeler',
-  },
-  {
-    id: 'cat_altin',
-    name: 'Sarrafiye',
-    icon: 'BanknotesIcon',
-    href: '/collections?category=altin',
-    description: 'Yatırım amaçlı altınlar',
   },
 ];
 
@@ -96,16 +76,18 @@ export default function CategoryCards() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category, index) => (
-            <div
+            <Link
               key={category.id}
+              href={category.href}
               ref={(el) => {
                 if (el) cardRefs.current.set(category.id, el);
               }}
               data-id={category.id}
-              className={`group p-8 bg-stone-50 rounded-organic-md border border-stone-200 hover:border-secondary hover:bg-white transition-all duration-500 hover:shadow-lg hover:scale-105 ${
+              className={`group block p-8 bg-stone-50 rounded-organic-md border border-stone-200 hover:border-secondary hover:bg-white transition-all duration-500 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary/40 ${
                 visibleCards.has(category.id) ? 'reveal active' : 'reveal'
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
+              aria-label={`${category.name} koleksiyonunu görüntüle`}
             >
               <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
                 <Icon name={category.icon as any} size={24} className="text-secondary" />
@@ -116,7 +98,7 @@ export default function CategoryCards() {
               </h3>
 
               <p className="text-sm text-stone-600">{category.description}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
