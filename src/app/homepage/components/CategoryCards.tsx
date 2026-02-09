@@ -1,208 +1,245 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
-import { PRODUCTS } from '@/data/product';
 
-interface Category {
-  id: 'yuzuk' | 'kolye' | 'bileklik';
+interface Review {
+  id: string;
   name: string;
-  icon: string;
-  href: string;
-  description: string;
-  badge?: string;
+  rating: number;
+  comment: string;
+  date: string;
+  tag?: string; // opsiyonel mini etiket
 }
 
-const categories: Category[] = [
+const reviews: Review[] = [
   {
-    id: 'yuzuk',
-    name: 'Yüzük',
-    icon: 'SparklesIcon',
-    href: '/collections/yuzuk',
-    description: 'Taşlı ve sade yüzükler',
-    badge: 'Popüler',
+    id: 'review_1',
+    name: 'Ayşe K.',
+    rating: 5,
+    comment:
+      'Alyanslarımızı buradan aldık. Hem kaliteli hem de uygun fiyatlı. Çok memnun kaldık.',
+    date: 'Ocak 2026',
+    tag: 'Alyans',
   },
   {
-    id: 'kolye',
-    name: 'Kolye',
-    icon: 'StarIcon',
-    href: '/collections/kolye',
-    description: 'Zarif kolye modelleri',
-    badge: 'Zarif',
+    id: 'review_2',
+    name: 'Mehmet Y.',
+    rating: 5,
+    comment: "Görele'de güvenilir bir kuyumcu. İşçilik çok özenli, tavsiye ederim.",
+    date: 'Aralık 2025',
+    tag: 'İşçilik',
   },
   {
-    id: 'bileklik',
-    name: 'Bileklik',
-    icon: 'LinkIcon',
-    href: '/collections/bileklik',
-    description: 'Şık bileklik çeşitleri',
-    badge: 'Klasik',
+    id: 'review_3',
+    name: 'Zeynep A.',
+    rating: 5,
+    comment: 'Özel tasarım kolyemi yaptırdım. Hayal ettiğimden daha güzel oldu. Teşekkürler.',
+    date: 'Kasım 2025',
+    tag: 'Özel Tasarım',
+  },
+  {
+    id: 'review_4',
+    name: 'Ali D.',
+    rating: 5,
+    comment: 'Satış sonrası hizmetleri de çok iyi. Yüzüğümün tamirini hızlıca yaptılar.',
+    date: 'Ekim 2025',
+    tag: 'Destek',
+  },
+  {
+    id: 'review_5',
+    name: 'Fatma S.',
+    rating: 5,
+    comment: 'Güler yüzlü ve samimi hizmet. Ürün çeşitliliği de oldukça fazla.',
+    date: 'Eylül 2025',
+    tag: 'Hizmet',
+  },
+  {
+    id: 'review_6',
+    name: 'Hasan B.',
+    rating: 5,
+    comment: 'Altın alım-satımında şeffaf ve dürüst. Yıllardır buradan alışveriş yapıyorum.',
+    date: 'Ağustos 2025',
+    tag: 'Güven',
   },
 ];
 
-export default function CategoryCards() {
-  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
+export default function CustomerReviews() {
+  const [visibleReviews, setVisibleReviews] = useState<Set<string>>(new Set());
+  const reviewRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  // Link ref’i: Next Link (App Router) anchor’a forwardRef yapar
-  const cardRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
-
-  // Ürün sayıları otomatik
-  const counts = useMemo(() => {
-    const c = { yuzuk: 0, kolye: 0, bileklik: 0 };
-    for (const p of PRODUCTS) {
-      if (p.category === 'yuzuk') c.yuzuk += 1;
-      if (p.category === 'kolye') c.kolye += 1;
-      if (p.category === 'bileklik') c.bileklik += 1;
-    }
-    return c;
+  const avgRating = useMemo(() => {
+    if (reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+    return Math.round((sum / reviews.length) * 10) / 10;
   }, []);
 
   useEffect(() => {
-    if (cardRefs.current.size === 0) return;
+    if (reviewRefs.current.size === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
+
           const id = entry.target.getAttribute('data-id');
           if (!id) return;
 
-          setVisibleCards((prev) => {
+          setVisibleReviews((prev) => {
             if (prev.has(id)) return prev;
             const next = new Set(prev);
             next.add(id);
             return next;
           });
 
-          // bir kere görünce gözlemlemeyi bırak -> daha az iş
-          observer.unobserve(entry.target);
+          observer.unobserve(entry.target); // performans
         });
       },
       { threshold: 0.15 },
     );
 
-    cardRefs.current.forEach((ref) => observer.observe(ref));
+    reviewRefs.current.forEach((ref) => observer.observe(ref));
     return () => observer.disconnect();
   }, []);
 
   return (
-    // ✅ Hero'daki "Koleksiyonları Gör" butonu bunu bulup buraya kayacak
-    <section id="koleksiyonlar" className="py-20 md:py-24 bg-white scroll-mt-24">
+    <section className="py-20 md:py-24 bg-stone-50">
       <div className="max-w-container mx-auto px-6">
-        {/* Başlık */}
+        {/* Heading */}
         <div className="text-center mb-10 md:mb-16 reveal">
           <span className="text-sm font-mono uppercase tracking-wider text-secondary mb-2 block">
-            Kategoriler
+            Müşteri Yorumları
           </span>
+
           <h2 className="text-4xl md:text-5xl font-playfair font-bold text-primary mb-4">
-            Koleksiyonlarımız
+            Müşterilerimiz Ne Diyor?
           </h2>
+
           <p className="text-lg text-stone-600 max-w-2xl mx-auto">
-            Seçili yüzük, kolye ve bileklik modellerini keşfedin.
+            Nazar Kuyumculuk’ta alışveriş yapan müşterilerimizin paylaştığı deneyimlerden seçmeler.
           </p>
+
+          {/* Mini rating özeti */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 text-sm text-stone-600">
+            <div className="inline-flex items-center gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Icon
+                  key={`avg_star_${i}`}
+                  name="StarIcon"
+                  size={16}
+                  className={`${
+                    i < Math.round(avgRating) ? 'text-secondary fill-secondary' : 'text-stone-300'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <span className="font-medium text-stone-700">{avgRating.toFixed(1)} / 5.0</span>
+            <span className="text-stone-400">•</span>
+            <span>{reviews.length} yorum</span>
+
+            {/* Opsiyonel: “tamamı” aksiyonu (şimdilik #store-info’ya da bağlayabiliriz) */}
+            <span className="hidden sm:inline text-stone-300">•</span>
+            <span className="hidden sm:inline text-stone-500">
+              (Yorumlar örnek amaçlıdır)
+            </span>
+          </div>
         </div>
 
-        {/* Mobil: yatay snap / Desktop: grid */}
+        {/* Mobile: snap slider | Desktop: grid */}
         <div
-          className="
+          className={`
             -mx-6 px-6
             flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3
             [scrollbar-width:none] [-ms-overflow-style:none]
             md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible
-          "
+          `}
         >
-          {categories.map((category, index) => {
-            const count =
-              category.id === 'yuzuk'
-                ? counts.yuzuk
-                : category.id === 'kolye'
-                  ? counts.kolye
-                  : counts.bileklik;
-
-            const revealed = visibleCards.has(category.id);
+          {reviews.map((review, index) => {
+            const revealed = visibleReviews.has(review.id);
 
             return (
-              <Link
-                key={category.id}
-                href={category.href}
+              <div
+                key={review.id}
                 ref={(el) => {
-                  if (el) cardRefs.current.set(category.id, el);
-                  else cardRefs.current.delete(category.id);
+                  if (el) reviewRefs.current.set(review.id, el);
+                  else reviewRefs.current.delete(review.id);
                 }}
-                data-id={category.id}
+                data-id={review.id}
+                role="article"
+                aria-label={`${review.name} yorumu`}
+                tabIndex={0}
                 className={`
-                  group relative block
+                  group relative
                   min-w-[85%] sm:min-w-[60%] md:min-w-0
                   snap-start
-                  p-7 md:p-8
-                  bg-stone-50
+                  p-7
+                  bg-white
                   rounded-organic-md
                   border border-stone-200
-                  hover:border-secondary hover:bg-white
                   transition-all duration-500
                   md:hover:shadow-lg md:hover:-translate-y-1
                   focus:outline-none focus:ring-2 focus:ring-secondary/40
                   ${revealed ? 'reveal active' : 'reveal'}
                 `}
-                style={{ transitionDelay: `${index * 90}ms` }}
-                aria-label={`${category.name} koleksiyonunu görüntüle`}
+                style={{ transitionDelay: `${index * 80}ms` }}
               >
-                {/* Üst çizgi (premium detay) */}
+                {/* accent line */}
                 <div
-                  className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary
-                             opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity"
                   aria-hidden="true"
                 />
 
-                {/* Badge */}
-                {category.badge && (
-                  <div className="absolute top-5 right-5">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-white/80 backdrop-blur text-stone-700">
-                      {category.badge}
+                {/* top row */}
+                <div className="flex items-start justify-between gap-3">
+                  {/* Stars: full 5 */}
+                  <div className="inline-flex items-center gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Icon
+                        key={`star_${review.id}_${i}`}
+                        name="StarIcon"
+                        size={16}
+                        className={`${
+                          i < review.rating ? 'text-secondary fill-secondary' : 'text-stone-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="w-9 h-9 rounded-full bg-secondary/10 flex items-center justify-center">
+                    <Icon name="ChatBubbleLeftRightIcon" size={18} className="text-secondary" />
+                  </div>
+                </div>
+
+                {/* Optional tag */}
+                {review.tag && (
+                  <div className="mt-3">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-stone-50 text-stone-700">
+                      {review.tag}
                     </span>
                   </div>
                 )}
 
-                {/* Icon */}
-                <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
-                  <Icon name={category.icon as any} size={24} className="text-secondary" />
+                <p className="mt-4 text-stone-700 leading-relaxed text-sm">
+                  “{review.comment}”
+                </p>
+
+                <div className="mt-5 flex items-center justify-between text-xs">
+                  <span className="font-bold text-primary">{review.name}</span>
+                  <span className="text-stone-500">{review.date}</span>
                 </div>
-
-                {/* Title + Count */}
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-xl font-playfair font-bold text-primary group-hover:text-secondary transition-colors">
-                    {category.name}
-                  </h3>
-
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-white text-stone-700">
-                    {count} ürün
-                  </span>
-                </div>
-
-                <p className="text-sm text-stone-600 mt-2">{category.description}</p>
-
-                {/* CTA hint */}
-                <div className="mt-5 inline-flex items-center gap-2 text-sm text-stone-600 group-hover:text-primary transition-colors">
-                  Koleksiyona git
-                  <Icon
-                    name="ArrowRightIcon"
-                    size={16}
-                    className="text-stone-500 group-hover:text-primary"
-                  />
-                </div>
-              </Link>
+              </div>
             );
           })}
         </div>
 
-        {/* Mobil ipucu */}
+        {/* Mobile hint */}
         <div className="mt-4 text-center text-sm text-stone-500 md:hidden">
-          Kaydırarak diğer koleksiyonları görebilirsiniz.
+          Kaydırarak diğer yorumları görebilirsiniz.
         </div>
       </div>
 
-      {/* scrollbar gizleme (webkit) */}
+      {/* webkit scrollbar hide */}
       <style jsx>{`
         div::-webkit-scrollbar {
           display: none;

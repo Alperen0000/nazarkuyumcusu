@@ -96,12 +96,12 @@ export default function WhyChooseUs() {
 
         {/* Mobile: snap slider | Desktop: grid */}
         <div
-          className="
+          className={`
             -mx-6 px-6
             flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3
             [scrollbar-width:none] [-ms-overflow-style:none]
             md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible
-          "
+          `}
         >
           {features.map((feature, index) => {
             const revealed = visibleItems.has(feature.id);
@@ -136,11 +136,11 @@ export default function WhyChooseUs() {
               >
                 {/* top accent */}
                 <div
-                  className="
+                  className={`
                     absolute left-0 top-0 w-full h-1
                     bg-gradient-to-r from-secondary via-accent to-secondary
                     opacity-0 group-hover:opacity-100 transition-opacity
-                  "
+                  `}
                   aria-hidden="true"
                 />
 
