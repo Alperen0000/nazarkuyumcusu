@@ -5,7 +5,6 @@ import Footer from '@/components/common/Footer';
 import HeroSection from './components/HeroSection';
 import CategoryCards from './components/CategoryCards';
 import WhyChooseUs from './components/WhyChooseUs';
-import FeaturedProducts from './components/FeaturedProducts';
 import CustomerReviews from './components/CustomerReviews';
 import StoreInfo from './components/StoreInfo';
 
@@ -29,7 +28,6 @@ export default function Homepage() {
         <HeroSection />
         <CategoryCards />
         <WhyChooseUs />
-        <FeaturedProducts />
         <CustomerReviews />
         <StoreInfo />
       </main>
