@@ -44,16 +44,19 @@ const categories: Category[] = [
 export default function CategoryCards() {
   const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
 
-  // Link ref’i: Next Link (App Router) anchor’a forwardRef yapar
-  const cardRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  // ref'i Link'e değil, wrapper div'e veriyoruz (App Router ref sorunlarını engeller)
+  const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  // Ürün sayıları otomatik
+  // Ürün sayıları (PRODUCTS bozuk/undefined olsa bile sayfa çökmeyecek şekilde)
   const counts = useMemo(() => {
     const c = { yuzuk: 0, kolye: 0, bileklik: 0 };
-    for (const p of PRODUCTS) {
-      if (p.category === 'yuzuk') c.yuzuk += 1;
-      if (p.category === 'kolye') c.kolye += 1;
-      if (p.category === 'bileklik') c.bileklik += 1;
+
+    const list = Array.isArray(PRODUCTS) ? PRODUCTS : [];
+    for (const p of list) {
+      const cat = (p as any)?.category;
+      if (cat === 'yuzuk') c.yuzuk += 1;
+      if (cat === 'kolye') c.kolye += 1;
+      if (cat === 'bileklik') c.bileklik += 1;
     }
     return c;
   }, []);
@@ -65,6 +68,7 @@ export default function CategoryCards() {
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
+
           const id = entry.target.getAttribute('data-id');
           if (!id) return;
 
@@ -75,7 +79,6 @@ export default function CategoryCards() {
             return next;
           });
 
-          // bir kere görünce gözlemlemeyi bırak -> daha az iş
           observer.unobserve(entry.target);
         });
       },
@@ -85,6 +88,7 @@ export default function CategoryCards() {
     cardRefs.current.forEach((ref) => observer.observe(ref));
     return () => observer.disconnect();
   }, []);
+
   return (
     <section id="koleksiyonlar" className="py-20 md:py-24 bg-white scroll-mt-24">
       <div className="max-w-container mx-auto px-6">
@@ -102,14 +106,8 @@ export default function CategoryCards() {
         </div>
 
         {/* Mobil: yatay snap / Desktop: grid */}
-        <div
-          className={`
-            -mx-6 px-6
-            flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3
-            [scrollbar-width:none] [-ms-overflow-style:none]
-            md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible
-          `}
-        >
+        <div className="-mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 [scrollbar-width:none] [-ms-overflow-style:none] md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible">
+
           {categories.map((category, index) => {
             const count =
               category.id === 'yuzuk'
@@ -121,75 +119,76 @@ export default function CategoryCards() {
             const revealed = visibleCards.has(category.id);
 
             return (
-              <Link
+              <div
                 key={category.id}
-                href={category.href}
                 ref={(el) => {
                   if (el) cardRefs.current.set(category.id, el);
                   else cardRefs.current.delete(category.id);
                 }}
                 data-id={category.id}
-                className={`
-                  group relative block
-                  min-w-[85%] sm:min-w-[60%] md:min-w-0
-                  snap-start
-                  p-7 md:p-8
-                  bg-stone-50
-                  rounded-organic-md
-                  border border-stone-200
-                  hover:border-secondary hover:bg-white
-                  transition-all duration-500
-                  md:hover:shadow-lg md:hover:-translate-y-1
-                  focus:outline-none focus:ring-2 focus:ring-secondary/40
-                  ${revealed ? 'reveal active' : 'reveal'}
-                `}
                 style={{ transitionDelay: `${index * 90}ms` }}
-                aria-label={`${category.name} koleksiyonunu görüntüle`}
+                className="min-w-[85%] sm:min-w-[60%] md:min-w-0 snap-start"
               >
-                {/* Üst çizgi (premium detay) */}
-                <div
-                  className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary
-                             opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-hidden="true"
-                />
+                <Link
+                  href={category.href}
+                  className={`
+                    group relative block
+                    p-7 md:p-8
+                    bg-stone-50
+                    rounded-organic-md
+                    border border-stone-200
+                    hover:border-secondary hover:bg-white
+                    transition-all duration-500
+                    md:hover:shadow-lg md:hover:-translate-y-1
+                    focus:outline-none focus:ring-2 focus:ring-secondary/40
+                    ${revealed ? 'reveal active' : 'reveal'}
+                  `}
+                  aria-label={`${category.name} koleksiyonunu görüntüle`}
+                >
+                  {/* Üst çizgi (premium detay) */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity"
+                  />
 
-                {/* Badge */}
-                {category.badge && (
-                  <div className="absolute top-5 right-5">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-white/80 backdrop-blur text-stone-700">
-                      {category.badge}
+                  {/* Badge */}
+                  {category.badge && (
+                    <div className="absolute top-5 right-5">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-white/80 backdrop-blur text-stone-700">
+                        {category.badge}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Icon */}
+                  <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+                    <Icon name={category.icon as any} size={24} className="text-secondary" />
+                  </div>
+
+                  {/* Title + Count */}
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="text-xl font-playfair font-bold text-primary group-hover:text-secondary transition-colors">
+                      {category.name}
+                    </h3>
+
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-white text-stone-700">
+                      {count} ürün
                     </span>
                   </div>
-                )}
 
-                {/* Icon */}
-                <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
-                  <Icon name={category.icon as any} size={24} className="text-secondary" />
-                </div>
+                  <p className="text-sm text-stone-600 mt-2">{category.description}</p>
 
-                {/* Title + Count */}
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-xl font-playfair font-bold text-primary group-hover:text-secondary transition-colors">
-                    {category.name}
-                  </h3>
-
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-white text-stone-700">
-                    {count} ürün
-                  </span>
-                </div>
-
-                <p className="text-sm text-stone-600 mt-2">{category.description}</p>
-
-                {/* CTA hint */}
-                <div className="mt-5 inline-flex items-center gap-2 text-sm text-stone-600 group-hover:text-primary transition-colors">
-                  Koleksiyona git
-                  <Icon
-                    name="ArrowRightIcon"
-                    size={16}
-                    className="text-stone-500 group-hover:text-primary"
-                  />
-                </div>
-              </Link>
+                  {/* CTA hint */}
+                  <div className="mt-5 inline-flex items-center gap-2 text-sm text-stone-600 group-hover:text-primary transition-colors">
+                    Koleksiyona git
+                    <Icon
+                      name="ArrowRightIcon"
+                      size={16}
+                      className="text-stone-500 group-hover:text-primary"
+                    />
+                  </div>
+                </Link>
+              </div>
             );
           })}
         </div>

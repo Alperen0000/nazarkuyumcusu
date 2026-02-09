@@ -147,14 +147,7 @@ export default function CustomerReviews() {
         </div>
 
         {/* Mobile: snap slider | Desktop: grid */}
-        <div
-          className={`
-            -mx-6 px-6
-            flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3
-            [scrollbar-width:none] [-ms-overflow-style:none]
-            md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible
-          `}
-        >
+        <div className="-mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 [scrollbar-width:none] [-ms-overflow-style:none] md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible">
           {reviews.map((review, index) => {
             const revealed = visibleReviews.has(review.id);
 
