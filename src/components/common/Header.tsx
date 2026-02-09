@@ -8,7 +8,11 @@ import NazarBeadIcon from '@/components/ui/NazarBeadIcon';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
+
+  // Ayrı state'ler (kritik)
+  const [isDesktopCollectionsOpen, setIsDesktopCollectionsOpen] = useState(false);
+  const [isMobileCollectionsOpen, setIsMobileCollectionsOpen] = useState(false);
+
   const [isScrolled, setIsScrolled] = useState(false);
 
   const pathname = usePathname();
@@ -43,7 +47,8 @@ export default function Header() {
 
   const closeAll = () => {
     setIsMenuOpen(false);
-    setIsCollectionsOpen(false);
+    setIsDesktopCollectionsOpen(false);
+    setIsMobileCollectionsOpen(false);
   };
 
   // Scroll state (header blur/shadow)
@@ -54,9 +59,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Mobil menü açıkken body scroll kilidi + ESC ile kapatma
+  // Mobil menü açılınca: body scroll kilidi + ESC ile kapatma + desktop dropdown'u kapat
   useEffect(() => {
     if (!isMenuOpen) return;
+
+    // Mobil açılınca desktop dropdown kesin kapansın
+    setIsDesktopCollectionsOpen(false);
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -73,26 +81,18 @@ export default function Header() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMenuOpen]);
 
-  // Dropdown dışına tıklayınca kapat (desktop + mobil)
+  // Desktop dropdown dışına tıklayınca kapat
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
       const target = e.target as Node;
-
-      // desktop collections dropdown
       if (collectionsRef.current && !collectionsRef.current.contains(target)) {
-        setIsCollectionsOpen(false);
-      }
-
-      // mobile menu dışına tık (overlay dışı)
-      if (isMenuOpen && mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
-        closeAll();
+        setIsDesktopCollectionsOpen(false);
       }
     };
 
     document.addEventListener('mousedown', onDocClick);
     return () => document.removeEventListener('mousedown', onDocClick);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMenuOpen]);
+  }, []);
 
   return (
     <header
@@ -106,7 +106,14 @@ export default function Header() {
       <div className="max-w-container mx-auto px-3 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/homepage" className="flex items-center gap-2 group">
+          <Link
+            href="/homepage"
+            className="flex items-center gap-2 group"
+            onClick={() => {
+              // logo tıklanınca menü açık kalmasın
+              closeAll();
+            }}
+          >
             <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
               <NazarBeadIcon className="w-10 h-10" />
             </div>
@@ -124,9 +131,7 @@ export default function Header() {
             <Link
               href="/homepage"
               className={`text-sm font-medium transition-colors relative ${
-                isActive('/homepage')
-                  ? 'text-primary'
-                  : 'text-stone-600 hover:text-primary'
+                isActive('/homepage') ? 'text-primary' : 'text-stone-600 hover:text-primary'
               }`}
             >
               Ana Sayfa
@@ -135,33 +140,33 @@ export default function Header() {
               )}
             </Link>
 
-            {/* Koleksiyonlarımız Dropdown */}
+            {/* Koleksiyonlarımız Dropdown (desktop) */}
             <div className="relative" ref={collectionsRef}>
               <button
                 type="button"
-                onClick={() => setIsCollectionsOpen((v) => !v)}
+                onClick={() => setIsDesktopCollectionsOpen((v) => !v)}
                 className={`text-sm font-medium transition-colors relative flex items-center gap-2 rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-secondary/40 ${
-                  isCollectionsOpen || isAnyCollectionActive
+                  isDesktopCollectionsOpen || isAnyCollectionActive
                     ? 'text-primary'
                     : 'text-stone-600 hover:text-primary'
                 }`}
                 aria-haspopup="menu"
-                aria-expanded={isCollectionsOpen}
+                aria-expanded={isDesktopCollectionsOpen}
               >
                 Koleksiyonlarımız
                 <Icon
                   name="ChevronDownIcon"
                   size={16}
                   className={`transition-transform ${
-                    isCollectionsOpen ? 'rotate-180' : 'rotate-0'
+                    isDesktopCollectionsOpen ? 'rotate-180' : 'rotate-0'
                   } text-stone-600`}
                 />
-                {(isAnyCollectionActive || isCollectionsOpen) && (
+                {(isAnyCollectionActive || isDesktopCollectionsOpen) && (
                   <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-secondary" />
                 )}
               </button>
 
-              {isCollectionsOpen && (
+              {isDesktopCollectionsOpen && (
                 <div
                   className="absolute left-0 top-[calc(100%+10px)] w-56 rounded-2xl border border-stone-200 bg-white/95 backdrop-blur shadow-xl overflow-hidden
                              origin-top-left animate-in fade-in zoom-in-95 duration-150"
@@ -182,7 +187,9 @@ export default function Header() {
                             : 'text-stone-700 hover:bg-stone-50 hover:text-primary'
                         }`}
                         role="menuitem"
-                        onClick={() => closeAll()}
+                        onClick={() => {
+                          setIsDesktopCollectionsOpen(false);
+                        }}
                       >
                         {item.label}
                       </Link>
@@ -219,7 +226,11 @@ export default function Header() {
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMenuOpen((v) => !v)}
+              onClick={() => {
+                setIsMenuOpen((v) => !v);
+                // Mobil menü aç-kap yaparken mobil accordion’u temiz tut
+                if (isMenuOpen) setIsMobileCollectionsOpen(false);
+              }}
               className="md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40"
               aria-label="Menü"
               aria-expanded={isMenuOpen}
@@ -236,8 +247,13 @@ export default function Header() {
         {/* Mobile: Overlay + Drawer */}
         {isMenuOpen && (
           <div className="md:hidden">
-            {/* Overlay */}
-            <div className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[1px]" />
+            {/* Overlay: tıkla kapat */}
+            <button
+              type="button"
+              aria-label="Menüyü Kapat"
+              className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[1px]"
+              onClick={closeAll}
+            />
 
             {/* Drawer */}
             <div
@@ -245,7 +261,7 @@ export default function Header() {
               className="fixed z-50 left-0 right-0 top-[calc(1rem+52px)] mx-3 rounded-2xl border border-stone-200 bg-white shadow-xl overflow-hidden
                          animate-in fade-in slide-in-from-top-2 duration-150"
             >
-              <nav className="p-4">
+              <nav className="p-4 relative z-50">
                 <div className="flex flex-col gap-3">
                   {/* Ana Sayfa */}
                   <Link
@@ -260,28 +276,28 @@ export default function Header() {
                     Ana Sayfa
                   </Link>
 
-                  {/* Koleksiyonlarımız (accordion) */}
+                  {/* Koleksiyonlarımız (accordion - mobile) */}
                   <button
                     type="button"
-                    onClick={() => setIsCollectionsOpen((v) => !v)}
+                    onClick={() => setIsMobileCollectionsOpen((v) => !v)}
                     className={`flex items-center justify-between text-base font-medium transition-colors rounded-xl px-3 py-2 ${
-                      isCollectionsOpen || isAnyCollectionActive
+                      isMobileCollectionsOpen || isAnyCollectionActive
                         ? 'text-primary bg-stone-50'
                         : 'text-stone-700 hover:text-primary hover:bg-stone-50'
                     }`}
-                    aria-expanded={isCollectionsOpen}
+                    aria-expanded={isMobileCollectionsOpen}
                   >
                     <span>Koleksiyonlarımız</span>
                     <Icon
                       name="ChevronDownIcon"
                       size={20}
                       className={`transition-transform ${
-                        isCollectionsOpen ? 'rotate-180' : 'rotate-0'
+                        isMobileCollectionsOpen ? 'rotate-180' : 'rotate-0'
                       }`}
                     />
                   </button>
 
-                  {isCollectionsOpen && (
+                  {isMobileCollectionsOpen && (
                     <div className="ml-3 pl-3 border-l border-stone-200 flex flex-col gap-1">
                       {collectionItems.map((item) => (
                         <Link
