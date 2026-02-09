@@ -43,15 +43,12 @@ const categories: Category[] = [
 
 export default function CategoryCards() {
   const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
-
-  // ref'i Link'e değil, wrapper div'e veriyoruz (App Router ref sorunlarını engeller)
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  // Ürün sayıları (PRODUCTS bozuk/undefined olsa bile sayfa çökmeyecek şekilde)
   const counts = useMemo(() => {
     const c = { yuzuk: 0, kolye: 0, bileklik: 0 };
-
     const list = Array.isArray(PRODUCTS) ? PRODUCTS : [];
+
     for (const p of list) {
       const cat = (p as any)?.category;
       if (cat === 'yuzuk') c.yuzuk += 1;
@@ -105,9 +102,7 @@ export default function CategoryCards() {
           </p>
         </div>
 
-        {/* Mobil: yatay snap / Desktop: grid */}
         <div className="-mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 [scrollbar-width:none] [-ms-overflow-style:none] md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible">
-
           {categories.map((category, index) => {
             const count =
               category.id === 'yuzuk'
@@ -136,22 +131,30 @@ export default function CategoryCards() {
                     p-7 md:p-8
                     bg-stone-50
                     rounded-organic-md
+                    overflow-hidden
                     border border-stone-200
                     hover:border-secondary hover:bg-white
-                    transition-all duration-500
+                    transition-[transform,box-shadow,border-color,background-color] duration-500
+                    transform-gpu will-change-transform
+                    [backface-visibility:hidden] [-webkit-backface-visibility:hidden]
                     md:hover:shadow-lg md:hover:-translate-y-1
-                    focus:outline-none focus:ring-2 focus:ring-secondary/40
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary/40
                     ${revealed ? 'reveal active' : 'reveal'}
                   `}
                   aria-label={`${category.name} koleksiyonunu görüntüle`}
                 >
-                  {/* Üst çizgi (premium detay) */}
-                  <div
+                  {/* Üst çizgi */}
+                  <span
                     aria-hidden="true"
-                    className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity"
+                    className={[
+                      'absolute left-0 top-0 w-full h-[2px]',
+                      'bg-gradient-to-r from-secondary via-accent to-secondary',
+                      'opacity-0 group-hover:opacity-100 transition-opacity duration-500',
+                      'rounded-t-[inherit] pointer-events-none',
+                      '[transform:translate3d(0,0,0)] [backface-visibility:hidden] [-webkit-backface-visibility:hidden]',
+                    ].join(' ')}
                   />
 
-                  {/* Badge */}
                   {category.badge && (
                     <div className="absolute top-5 right-5">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-white/80 backdrop-blur text-stone-700">
@@ -160,12 +163,10 @@ export default function CategoryCards() {
                     </div>
                   )}
 
-                  {/* Icon */}
                   <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
                     <Icon name={category.icon as any} size={24} className="text-secondary" />
                   </div>
 
-                  {/* Title + Count */}
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="text-xl font-playfair font-bold text-primary group-hover:text-secondary transition-colors">
                       {category.name}
@@ -178,7 +179,6 @@ export default function CategoryCards() {
 
                   <p className="text-sm text-stone-600 mt-2">{category.description}</p>
 
-                  {/* CTA hint */}
                   <div className="mt-5 inline-flex items-center gap-2 text-sm text-stone-600 group-hover:text-primary transition-colors">
                     Koleksiyona git
                     <Icon
@@ -193,13 +193,11 @@ export default function CategoryCards() {
           })}
         </div>
 
-        {/* Mobil ipucu */}
         <div className="mt-4 text-center text-sm text-stone-500 md:hidden">
           Kaydırarak diğer koleksiyonları görebilirsiniz.
         </div>
       </div>
 
-      {/* scrollbar gizleme (webkit) */}
       <style jsx>{`
         div::-webkit-scrollbar {
           display: none;

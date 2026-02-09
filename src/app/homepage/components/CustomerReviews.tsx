@@ -169,17 +169,18 @@ export default function CustomerReviews() {
                   p-7
                   bg-white
                   rounded-organic-md
+                  overflow-hidden
                   border border-stone-200
-                  transition-all duration-500
+                  transition-transform transform-gpu will-change-transform duration-500
                   md:hover:shadow-lg md:hover:-translate-y-1
-                  focus:outline-none focus:ring-2 focus:ring-secondary/40
+                  focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40
                   ${revealed ? 'reveal active' : 'reveal'}
                 `}
                 style={{ transitionDelay: `${index * 80}ms` }}
               >
                 {/* accent line */}
                 <div
-                  className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute left-0 top-0 w-full h-[2px] bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity rounded-t-[inherit] pointer-events-none"
                   aria-hidden="true"
                 />
 
@@ -199,7 +200,7 @@ export default function CustomerReviews() {
                     ))}
                   </div>
 
-                  <div className="w-9 h-9 rounded-full bg-secondary/10 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-secondary/10 flex items-center justify-center">
                     <Icon name="ChatBubbleLeftRightIcon" size={18} className="text-secondary" />
                   </div>
                 </div>
@@ -207,7 +208,7 @@ export default function CustomerReviews() {
                 {/* Optional tag */}
                 {review.tag && (
                   <div className="mt-3">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs border border-stone-200 bg-stone-50 text-stone-700">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full overflow-hidden text-xs border border-stone-200 bg-stone-50 text-stone-700">
                       {review.tag}
                     </span>
                   </div>

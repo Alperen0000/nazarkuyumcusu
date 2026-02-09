@@ -84,11 +84,11 @@ export default function StoreInfo() {
           {/* Left: Info */}
           <div className={`space-y-5 ${isVisible ? 'reveal active delay-200' : 'reveal'}`}>
             {/* Adres */}
-            <div className="group relative p-6 bg-stone-50 rounded-organic-md border border-stone-200 transition-all duration-500 md:hover:shadow-lg md:hover:-translate-y-1">
-              <div className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="group relative p-6 bg-stone-50 rounded-organic-md overflow-hidden border border-stone-200 transition-transform transform-gpu will-change-transform duration-500 md:hover:shadow-lg md:hover:-translate-y-1">
+              <div className="absolute left-0 top-0 w-full h-[2px] bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity rounded-t-[inherit] pointer-events-none" />
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
+                <div className="w-12 h-12 bg-secondary/10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
                   <Icon name="MapPinIcon" size={24} className="text-secondary" />
                 </div>
 
@@ -99,7 +99,7 @@ export default function StoreInfo() {
                     <button
                       type="button"
                       onClick={copyAddress}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 transition-colors"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full overflow-hidden text-xs border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 transition-colors"
                       aria-label="Adresi kopyala"
                     >
                       <Icon name={copied ? 'CheckIcon' : 'ClipboardIcon'} size={14} />
@@ -127,11 +127,11 @@ export default function StoreInfo() {
             </div>
 
             {/* Çalışma Saatleri */}
-            <div className="group relative p-6 bg-stone-50 rounded-organic-md border border-stone-200 transition-all duration-500 md:hover:shadow-lg md:hover:-translate-y-1">
-              <div className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="group relative p-6 bg-stone-50 rounded-organic-md overflow-hidden border border-stone-200 transition-transform transform-gpu will-change-transform duration-500 md:hover:shadow-lg md:hover:-translate-y-1">
+              <div className="absolute left-0 top-0 w-full h-[2px] bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity rounded-t-[inherit] pointer-events-none" />
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
+                <div className="w-12 h-12 bg-secondary/10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
                   <Icon name="ClockIcon" size={24} className="text-secondary" />
                 </div>
 
@@ -152,11 +152,11 @@ export default function StoreInfo() {
             </div>
 
             {/* İletişim */}
-            <div className="group relative p-6 bg-stone-50 rounded-organic-md border border-stone-200 transition-all duration-500 md:hover:shadow-lg md:hover:-translate-y-1">
-              <div className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="group relative p-6 bg-stone-50 rounded-organic-md overflow-hidden border border-stone-200 transition-transform transform-gpu will-change-transform duration-500 md:hover:shadow-lg md:hover:-translate-y-1">
+              <div className="absolute left-0 top-0 w-full h-[2px] bg-gradient-to-r from-secondary via-accent to-secondary opacity-0 group-hover:opacity-100 transition-opacity rounded-t-[inherit] pointer-events-none" />
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
+                <div className="w-12 h-12 bg-secondary/10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
                   <Icon name="PhoneIcon" size={24} className="text-secondary" />
                 </div>
 
@@ -190,7 +190,7 @@ export default function StoreInfo() {
                 href={info.directionsHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-secondary text-primary rounded-full font-medium hover:bg-accent transition-all focus:outline-none focus:ring-2 focus:ring-secondary/40"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-secondary text-primary rounded-full overflow-hidden font-medium hover:bg-accent transition-transform transform-gpu will-change-transform focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
               >
                 <Icon name="MapPinIcon" size={20} />
                 Yol Tarifi Al
@@ -198,7 +198,7 @@ export default function StoreInfo() {
 
               <a
                 href={info.phoneHref}
-                className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-stone-200 text-stone-700 rounded-full font-medium hover:bg-stone-50 transition-all focus:outline-none focus:ring-2 focus:ring-secondary/40"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-stone-200 text-stone-700 rounded-full overflow-hidden font-medium hover:bg-stone-50 transition-transform transform-gpu will-change-transform focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
               >
                 <Icon name="PhoneIcon" size={20} />
                 Hemen Ara
@@ -226,7 +226,7 @@ export default function StoreInfo() {
                   href={info.mapsOpenHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/90 backdrop-blur border border-stone-200 text-sm text-stone-700 hover:bg-white transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full overflow-hidden bg-white/90 backdrop-blur border border-stone-200 text-sm text-stone-700 hover:bg-white transition-colors"
                 >
                   Haritada Aç
                   <Icon name="ArrowTopRightOnSquareIcon" size={16} />

@@ -24,7 +24,7 @@ export default function WhatsAppButton() {
         className={`absolute right-full mr-3 top-1/2 -translate-y-1/2
           whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium
           bg-white text-stone-700 shadow-lg border border-stone-200
-          transition-all duration-300
+          transition-transform transform-gpu will-change-transform duration-300
           ${hovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2 pointer-events-none'}
         `}
       >
@@ -44,7 +44,7 @@ export default function WhatsAppButton() {
           shadow-xl
           transition-transform duration-300
           hover:scale-110
-          focus:outline-none focus:ring-4 focus:ring-[#25D366]/40
+          focus-visible:outline-none focus-visible:ring-4 focus:ring-[#25D366]/40
           before:absolute before:inset-0 before:rounded-full
           before:bg-white/20 before:blur-md before:opacity-0 hover:before:opacity-100
           animate-[pulse_3s_ease-in-out_infinite]

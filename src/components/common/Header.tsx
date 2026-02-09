@@ -96,7 +96,7 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-transform transform-gpu will-change-transform duration-300 ${
         isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-white'
       }`}
     >
@@ -145,7 +145,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setIsDesktopCollectionsOpen((v) => !v)}
-                className={`text-sm font-medium transition-colors relative flex items-center gap-2 rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-secondary/40 ${
+                className={`text-sm font-medium transition-colors relative flex items-center gap-2 rounded-full px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40 ${
                   isDesktopCollectionsOpen || isAnyCollectionActive
                     ? 'text-primary'
                     : 'text-stone-600 hover:text-primary'
@@ -205,7 +205,7 @@ export default function Header() {
             {/* Bizi Arayın */}
             <a
               href={phoneHref}
-              className="hidden md:flex p-2 hover:bg-stone-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40"
+              className="hidden md:flex p-2 hover:bg-stone-100 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
               aria-label={`Bizi Arayın: ${phoneDisplay}`}
               title={phoneDisplay}
             >
@@ -218,7 +218,7 @@ export default function Header() {
               target="_blank"
               rel="noopener noreferrer"
               className="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-secondary text-primary rounded-full text-sm font-medium hover:bg-accent transition-colors
-                         focus:outline-none focus:ring-2 focus:ring-secondary/40"
+                         focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
             >
               <Icon name="MapPinIcon" size={16} />
               Yol Tarifi
@@ -231,7 +231,7 @@ export default function Header() {
                 // Mobil menü aç-kap yaparken mobil accordion’u temiz tut
                 if (isMenuOpen) setIsMobileCollectionsOpen(false);
               }}
-              className="md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40"
+              className="md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
               aria-label="Menü"
               aria-expanded={isMenuOpen}
             >

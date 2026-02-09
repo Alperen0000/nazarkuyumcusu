@@ -35,8 +35,8 @@ export default function HeroSection() {
       {/* Background (soft gradient + blur blobs) */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-stone-950/40 via-stone-950/30 to-stone-950/70" />
-        <div className="absolute -top-24 -right-24 w-[520px] h-[520px] rounded-full bg-secondary/25 blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 w-[560px] h-[560px] rounded-full bg-accent/20 blur-3xl" />
+        <div className="absolute -top-24 -right-24 w-[520px] h-[520px] rounded-full overflow-hidden bg-secondary/25 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-[560px] h-[560px] rounded-full overflow-hidden bg-accent/20 blur-3xl" />
       </div>
 
       {/* Product collage (right side) */}
@@ -103,15 +103,15 @@ export default function HeroSection() {
 
           {/* Trust pills */}
           <div className="flex flex-wrap gap-2 mb-8 reveal delay-700">
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full overflow-hidden bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
               <Icon name="SparklesIcon" size={16} />
               14 / 22 Ayar
             </span>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full overflow-hidden bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
               <Icon name="ShieldCheckIcon" size={16} />
               Güvenli alışveriş
             </span>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full overflow-hidden bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
               <Icon name="MapPinIcon" size={16} />
               Görele / Giresun
             </span>
@@ -122,7 +122,7 @@ export default function HeroSection() {
             <button
               type="button"
               onClick={scrollToCollections}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-primary rounded-full font-medium hover:bg-accent transition-all hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-secondary/40"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-primary rounded-full overflow-hidden font-medium hover:bg-accent transition-transform transform-gpu will-change-transform hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
             >
               Koleksiyonları Gör
               <Icon name="ArrowDownIcon" size={20} />
@@ -132,7 +132,7 @@ export default function HeroSection() {
               href={directionsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-medium hover:bg-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full overflow-hidden font-medium hover:bg-white/20 transition-transform transform-gpu will-change-transform focus-visible:outline-none focus-visible:ring-2 focus:ring-white/30"
             >
               <Icon name="MapPinIcon" size={20} />
               Yol Tarifi Al

@@ -117,11 +117,12 @@ export default function WhyChooseUs() {
                   p-7 md:p-8
                   bg-white
                   rounded-organic-md
+                  overflow-hidden
                   border border-stone-200
-                  transition-all duration-500
+                  transition-transform transform-gpu will-change-transform duration-500
                   hover:border-secondary
                   md:hover:shadow-lg md:hover:-translate-y-1
-                  focus:outline-none focus:ring-2 focus:ring-secondary/40
+                  focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40
                   ${feature.featured ? 'md:shadow-sm md:border-secondary/40' : ''}
                   ${revealed ? 'reveal active' : 'reveal'}
                 `}
@@ -130,9 +131,10 @@ export default function WhyChooseUs() {
                 {/* top accent */}
                 <div
                   className={`
-                    absolute left-0 top-0 w-full h-1
+                    absolute left-0 top-0 w-full h-[2px]
                     bg-gradient-to-r from-secondary via-accent to-secondary
                     opacity-0 group-hover:opacity-100 transition-opacity
+                    rounded-t-[inherit] pointer-events-none
                   `}
                   aria-hidden="true"
                 />
@@ -146,7 +148,7 @@ export default function WhyChooseUs() {
                 )}
 
                 {/* icon */}
-                <div className="relative w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+                <div className="relative w-14 h-14 bg-secondary/10 rounded-full overflow-hidden flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
                   <Icon name={feature.icon as any} size={28} className="text-secondary" />
                 </div>
 
@@ -183,7 +185,7 @@ export default function WhyChooseUs() {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             href={phoneHref}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white border border-stone-200 text-stone-700 font-medium hover:bg-stone-50 transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full overflow-hidden bg-white border border-stone-200 text-stone-700 font-medium hover:bg-stone-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
           >
             <Icon name="PhoneIcon" size={18} />
             Ara: {phoneDisplay}
@@ -193,7 +195,7 @@ export default function WhyChooseUs() {
             href={directionsHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-secondary text-primary font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full overflow-hidden bg-secondary text-primary font-medium hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus:ring-secondary/40"
           >
             <Icon name="MapPinIcon" size={18} />
             Yol Tarifi Al
