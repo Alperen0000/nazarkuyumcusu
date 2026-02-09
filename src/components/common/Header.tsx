@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
@@ -8,36 +8,14 @@ import NazarBeadIcon from '@/components/ui/NazarBeadIcon';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Koleksiyonlarımız (desktop dropdown + mobil accordion)
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
-  const collectionsRef = useRef<HTMLDivElement | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const pathname = usePathname();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Dropdown dışına tıklayınca kapat (desktop)
-  useEffect(() => {
-    const onDocClick = (e: MouseEvent) => {
-      if (!collectionsRef.current) return;
-      if (!collectionsRef.current.contains(e.target as Node)) {
-        setIsCollectionsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
-  }, []);
-
-  const isActive = (href: string) => pathname === href;
+  // Refs
+  const collectionsRef = useRef<HTMLDivElement | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 
   // Telefon
   const phoneDisplay = '+90 (454) 513 15 77';
@@ -47,14 +25,74 @@ export default function Header() {
   const directionsHref =
     'https://www.google.com/maps/dir/?api=1&destination=Nazar+Kuyumculuk+Görele';
 
-  // Nav: Ana Sayfa + Koleksiyonlarımız (dropdown)
-  const collectionItems = [
-    { id: 'col_yuzuk', label: 'Yüzük', href: '/collections/yuzuk' },
-    { id: 'col_kolye', label: 'Kolye', href: '/collections/kolye' },
-    { id: 'col_bileklik', label: 'Bileklik', href: '/collections/bileklik' },
-  ];
+  // Koleksiyonlar
+  const collectionItems = useMemo(
+    () => [
+      { id: 'col_yuzuk', label: 'Yüzük', href: '/collections/yuzuk' },
+      { id: 'col_kolye', label: 'Kolye', href: '/collections/kolye' },
+      { id: 'col_bileklik', label: 'Bileklik', href: '/collections/bileklik' },
+    ],
+    [],
+  );
 
-  const isAnyCollectionActive = collectionItems.some((i) => isActive(i.href));
+  const isActive = (href: string) => pathname === href;
+  const isAnyCollectionActive = useMemo(
+    () => collectionItems.some((i) => isActive(i.href)),
+    [collectionItems, pathname],
+  );
+
+  const closeAll = () => {
+    setIsMenuOpen(false);
+    setIsCollectionsOpen(false);
+  };
+
+  // Scroll state (header blur/shadow)
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Mobil menü açıkken body scroll kilidi + ESC ile kapatma
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeAll();
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMenuOpen]);
+
+  // Dropdown dışına tıklayınca kapat (desktop + mobil)
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      const target = e.target as Node;
+
+      // desktop collections dropdown
+      if (collectionsRef.current && !collectionsRef.current.contains(target)) {
+        setIsCollectionsOpen(false);
+      }
+
+      // mobile menu dışına tık (overlay dışı)
+      if (isMenuOpen && mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
+        closeAll();
+      }
+    };
+
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMenuOpen]);
 
   return (
     <header
@@ -102,7 +140,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setIsCollectionsOpen((v) => !v)}
-                className={`text-sm font-medium transition-colors relative flex items-center gap-2 ${
+                className={`text-sm font-medium transition-colors relative flex items-center gap-2 rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-secondary/40 ${
                   isCollectionsOpen || isAnyCollectionActive
                     ? 'text-primary'
                     : 'text-stone-600 hover:text-primary'
@@ -125,27 +163,31 @@ export default function Header() {
 
               {isCollectionsOpen && (
                 <div
-                  className="absolute left-0 top-[calc(100%+10px)] w-56 rounded-2xl border border-stone-200 bg-white shadow-lg overflow-hidden"
+                  className="absolute left-0 top-[calc(100%+10px)] w-56 rounded-2xl border border-stone-200 bg-white/95 backdrop-blur shadow-xl overflow-hidden
+                             origin-top-left animate-in fade-in zoom-in-95 duration-150"
                   role="menu"
                 >
-                  {collectionItems.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={item.href}
-                      className={`block px-4 py-3 text-sm transition-colors ${
-                        isActive(item.href)
-                          ? 'bg-stone-50 text-primary'
-                          : 'text-stone-700 hover:bg-stone-50 hover:text-primary'
-                      }`}
-                      role="menuitem"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsCollectionsOpen(false);
-                      }}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                  <div className="px-3 pt-3 pb-2">
+                    <div className="text-xs text-stone-500">Kategoriler</div>
+                  </div>
+
+                  <div className="pb-2">
+                    {collectionItems.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className={`mx-2 block rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                          isActive(item.href)
+                            ? 'bg-stone-100 text-primary'
+                            : 'text-stone-700 hover:bg-stone-50 hover:text-primary'
+                        }`}
+                        role="menuitem"
+                        onClick={() => closeAll()}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -156,7 +198,7 @@ export default function Header() {
             {/* Bizi Arayın */}
             <a
               href={phoneHref}
-              className="hidden md:flex p-2 hover:bg-stone-100 rounded-full transition-colors"
+              className="hidden md:flex p-2 hover:bg-stone-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40"
               aria-label={`Bizi Arayın: ${phoneDisplay}`}
               title={phoneDisplay}
             >
@@ -168,7 +210,8 @@ export default function Header() {
               href={directionsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-secondary text-primary rounded-full text-sm font-medium hover:bg-accent transition-colors"
+              className="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-secondary text-primary rounded-full text-sm font-medium hover:bg-accent transition-colors
+                         focus:outline-none focus:ring-2 focus:ring-secondary/40"
             >
               <Icon name="MapPinIcon" size={16} />
               Yol Tarifi
@@ -176,9 +219,10 @@ export default function Header() {
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors"
+              onClick={() => setIsMenuOpen((v) => !v)}
+              className="md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40"
               aria-label="Menü"
+              aria-expanded={isMenuOpen}
             >
               <Icon
                 name={isMenuOpen ? 'XMarkIcon' : 'Bars3Icon'}
@@ -189,91 +233,100 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile: Overlay + Drawer */}
         {isMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t border-stone-200 pt-4 animate-slide-up">
-            <div className="flex flex-col gap-4">
-              {/* Ana Sayfa */}
-              <Link
-                href="/homepage"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  setIsCollectionsOpen(false);
-                }}
-                className={`text-base font-medium transition-colors ${
-                  isActive('/homepage')
-                    ? 'text-primary'
-                    : 'text-stone-600 hover:text-primary'
-                }`}
-              >
-                Ana Sayfa
-              </Link>
+          <div className="md:hidden">
+            {/* Overlay */}
+            <div className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[1px]" />
 
-              {/* Mobilde Ana Sayfa altına: Koleksiyonlarımız */}
-              <button
-                type="button"
-                onClick={() => setIsCollectionsOpen((v) => !v)}
-                className={`flex items-center justify-between text-base font-medium transition-colors ${
-                  isCollectionsOpen || isAnyCollectionActive
-                    ? 'text-primary'
-                    : 'text-stone-600 hover:text-primary'
-                }`}
-                aria-expanded={isCollectionsOpen}
-              >
-                <span>Koleksiyonlarımız</span>
-                <Icon
-                  name="ChevronDownIcon"
-                  size={20}
-                  className={`transition-transform ${
-                    isCollectionsOpen ? 'rotate-180' : 'rotate-0'
-                  }`}
-                />
-              </button>
+            {/* Drawer */}
+            <div
+              ref={mobileMenuRef}
+              className="fixed z-50 left-0 right-0 top-[calc(1rem+52px)] mx-3 rounded-2xl border border-stone-200 bg-white shadow-xl overflow-hidden
+                         animate-in fade-in slide-in-from-top-2 duration-150"
+            >
+              <nav className="p-4">
+                <div className="flex flex-col gap-3">
+                  {/* Ana Sayfa */}
+                  <Link
+                    href="/homepage"
+                    onClick={closeAll}
+                    className={`text-base font-medium transition-colors rounded-xl px-3 py-2 ${
+                      isActive('/homepage')
+                        ? 'text-primary bg-stone-50'
+                        : 'text-stone-700 hover:text-primary hover:bg-stone-50'
+                    }`}
+                  >
+                    Ana Sayfa
+                  </Link>
 
-              {isCollectionsOpen && (
-                <div className="ml-3 pl-3 border-l border-stone-200 flex flex-col gap-2">
-                  {collectionItems.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={item.href}
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        setIsCollectionsOpen(false);
-                      }}
-                      className={`text-base transition-colors ${
-                        isActive(item.href)
-                          ? 'text-primary'
-                          : 'text-stone-600 hover:text-primary'
+                  {/* Koleksiyonlarımız (accordion) */}
+                  <button
+                    type="button"
+                    onClick={() => setIsCollectionsOpen((v) => !v)}
+                    className={`flex items-center justify-between text-base font-medium transition-colors rounded-xl px-3 py-2 ${
+                      isCollectionsOpen || isAnyCollectionActive
+                        ? 'text-primary bg-stone-50'
+                        : 'text-stone-700 hover:text-primary hover:bg-stone-50'
+                    }`}
+                    aria-expanded={isCollectionsOpen}
+                  >
+                    <span>Koleksiyonlarımız</span>
+                    <Icon
+                      name="ChevronDownIcon"
+                      size={20}
+                      className={`transition-transform ${
+                        isCollectionsOpen ? 'rotate-180' : 'rotate-0'
                       }`}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                    />
+                  </button>
+
+                  {isCollectionsOpen && (
+                    <div className="ml-3 pl-3 border-l border-stone-200 flex flex-col gap-1">
+                      {collectionItems.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={item.href}
+                          onClick={closeAll}
+                          className={`text-base transition-colors rounded-xl px-3 py-2 ${
+                            isActive(item.href)
+                              ? 'text-primary bg-stone-50'
+                              : 'text-stone-700 hover:text-primary hover:bg-stone-50'
+                          }`}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="h-px bg-stone-200 my-1" />
+
+                  {/* Bizi Arayın */}
+                  <a
+                    href={phoneHref}
+                    className="flex items-center gap-2 text-base font-medium text-stone-700 hover:text-primary hover:bg-stone-50 transition-colors rounded-xl px-3 py-2"
+                    onClick={closeAll}
+                  >
+                    <Icon name="PhoneIcon" size={20} />
+                    Bizi Arayın
+                  </a>
+
+                  {/* Yol Tarifi Al */}
+                  <a
+                    href={directionsHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-base font-medium text-stone-700 hover:text-primary hover:bg-stone-50 transition-colors rounded-xl px-3 py-2"
+                    onClick={closeAll}
+                  >
+                    <Icon name="MapPinIcon" size={20} />
+                    Yol Tarifi Al
+                  </a>
                 </div>
-              )}
-
-              {/* Bizi Arayın */}
-              <a
-                href={phoneHref}
-                className="flex items-center gap-2 text-base font-medium text-stone-600 hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Icon name="PhoneIcon" size={20} />
-                Bizi Arayın
-              </a>
-
-              {/* Yol Tarifi Al */}
-              <a
-                href={directionsHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-base font-medium text-stone-600 hover:text-primary transition-colors"
-              >
-                <Icon name="MapPinIcon" size={20} />
-                Yol Tarifi Al
-              </a>
+              </nav>
             </div>
-          </nav>
+          </div>
         )}
       </div>
     </header>
