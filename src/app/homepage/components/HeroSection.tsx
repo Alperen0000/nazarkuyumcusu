@@ -1,105 +1,156 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import AppImage from '@/components/ui/AppImage';
+import Image from 'next/image';
 import Icon from '@/components/ui/AppIcon';
 
 export default function HeroSection() {
   const [isRevealed, setIsRevealed] = useState(false);
 
+  // Tek kaynak: telefon + maps
+  const phoneDisplay = '+90 (454) 513 15 77';
+  const phoneHref = 'tel:+904545131577';
+  const directionsHref =
+    'https://www.google.com/maps/dir/?api=1&destination=Nazar+Kuyumculuk+Görele';
+
+  // Kendi ürün görsellerin (public içinde olmalı)
+  const heroImages = [
+    { src: '/products/yuzuk/yuzuk-001.webp', alt: '14 ayar yüzük modeli' },
+    { src: '/products/kolye/kolye-001.webp', alt: 'Zarif kolye modeli' },
+    { src: '/products/bileklik/bileklik-001.webp', alt: 'Şık bileklik modeli' },
+  ];
+
   useEffect(() => {
-    setTimeout(() => setIsRevealed(true), 300);
+    const t = window.setTimeout(() => setIsRevealed(true), 250);
+    return () => window.clearTimeout(t);
   }, []);
 
+  const scrollToCollections = () => {
+    const el = document.getElementById('koleksiyonlar');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
-    <section className="relative min-h-[90vh] bg-stone-100 overflow-hidden rounded-bl-[80px] md:rounded-bl-[150px]">
-      {/* Background Image with Overlay */}
+    <section className="relative min-h-[90svh] bg-stone-100 overflow-hidden rounded-bl-[80px] md:rounded-bl-[150px]">
+      {/* Background (soft gradient + blur blobs) */}
       <div className="absolute inset-0">
-        <AppImage
-          src="https://images.unsplash.com/photo-1607063719477-330ed95c9688"
-          alt="Altın yüzük ve mücevher koleksiyonu, yakın çekim detay"
-          className="w-full h-full object-cover" />
-
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-stone-950/40 via-stone-950/30 to-stone-950/70" />
+        <div className="absolute -top-24 -right-24 w-[520px] h-[520px] rounded-full bg-secondary/25 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-[560px] h-[560px] rounded-full bg-accent/20 blur-3xl" />
       </div>
 
-      {/* Floating Info Card (Desktop) */}
-      <div className="hidden md:block absolute top-24 right-2 bg-white p-8 rounded-organic-md w-80 shadow-2xl z-20 animate-slide-in-right">
-        <div className="flex items-start justify-between mb-6">
-          <h3 className="text-lg font-playfair font-bold text-primary leading-tight">
-            Mağaza Bilgileri
-          </h3>
-          <Icon name="SparklesIcon" size={24} className="text-secondary" />
-        </div>
-        <div className="space-y-4 text-sm text-stone-600">
-          <div>
-            <span className="block font-bold text-primary mb-1">Çalışma Saatleri</span>
-            <p>Pazartesi - Cumartesi: 08:00 - 18:00</p>
+      {/* Product collage (right side) */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="hidden md:block absolute right-6 top-24 w-[460px] h-[520px]">
+          {/* big card */}
+          <div className="absolute right-0 top-0 w-[360px] h-[360px] rounded-3xl overflow-hidden border border-white/25 bg-white/10 backdrop-blur shadow-2xl">
+            <Image
+              src={heroImages[0].src}
+              alt={heroImages[0].alt}
+              fill
+              className="object-contain p-6"
+              sizes="360px"
+              priority
+            />
           </div>
-          <div>
-            <span className="block font-bold text-primary mb-1">İletişim</span>
-            <p className="flex items-center gap-2">
-              <Icon name="PhoneIcon" size={16} className="text-secondary" />
-              <a href="tel:+904543112233" className="hover:text-secondary transition-colors">
-                +90 (454) 513 15 77
-              </a>
-            </p>
+
+          {/* medium card */}
+          <div className="absolute left-0 top-24 w-[260px] h-[260px] rounded-3xl overflow-hidden border border-white/25 bg-white/10 backdrop-blur shadow-2xl">
+            <Image
+              src={heroImages[1].src}
+              alt={heroImages[1].alt}
+              fill
+              className="object-contain p-5"
+              sizes="260px"
+            />
           </div>
-          <div className="pt-2 italic text-stone-500 text-xs">
-            "Güven ve kalite, her zaman önceliğimiz."
+
+          {/* small card */}
+          <div className="absolute right-10 bottom-0 w-[220px] h-[220px] rounded-3xl overflow-hidden border border-white/25 bg-white/10 backdrop-blur shadow-2xl">
+            <Image
+              src={heroImages[2].src}
+              alt={heroImages[2].alt}
+              fill
+              className="object-contain p-5"
+              sizes="220px"
+            />
           </div>
         </div>
       </div>
 
-      {/* Hero Content */}
-      <div className="relative z-10 max-w-container mx-auto px-3 py-24 md:py-32 flex flex-col justify-end min-h-[90vh]">
+      {/* Content */}
+      <div className="relative z-10 max-w-container mx-auto px-3 py-24 md:py-32 flex flex-col justify-end min-h-[90svh]">
         <div className={`${isRevealed ? 'reveal-active' : ''}`}>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-playfair font-bold text-white leading-none mb-6">
+          {/* Title */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-playfair font-bold text-white leading-[0.95] mb-6">
             <span className="text-reveal-wrapper">
-              <span className="text-reveal-content delay-200">Görele'de</span>
+              <span className="text-reveal-content delay-200">Görele’nin</span>
             </span>
             <br />
             <span className="text-reveal-wrapper">
-              <span className="text-reveal-content delay-300">Işıltı ve</span>
+              <span className="text-reveal-content delay-350">Güvenilir</span>
             </span>
             <br />
             <span className="text-reveal-wrapper">
-              <span className="text-reveal-content delay-500">Zarafet</span>
+              <span className="text-reveal-content delay-500">Kuyumcusu</span>
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/90 max-w-xl mb-8 reveal delay-700">
-            Kaliteli işçilik ve güvenilir hizmetle, özel anlarınıza değer katıyoruz.
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl text-white/90 max-w-xl mb-6 reveal delay-650">
+            14 ve 22 ayar seçkin koleksiyonlar • Özenli işçilik • Güvenli alışveriş deneyimi
           </p>
 
-          <div className="flex flex-wrap gap-4 reveal delay-700">
-            <Link
-              href="/collections"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-primary rounded-full font-medium hover:bg-accent transition-all hover:scale-105">
+          {/* Trust pills */}
+          <div className="flex flex-wrap gap-2 mb-8 reveal delay-700">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
+              <Icon name="SparklesIcon" size={16} />
+              14 / 22 Ayar
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
+              <Icon name="ShieldCheckIcon" size={16} />
+              Güvenli alışveriş
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white/90 text-sm">
+              <Icon name="MapPinIcon" size={16} />
+              Görele / Giresun
+            </span>
+          </div>
 
+          {/* CTA (2 adet) */}
+          <div className="flex flex-wrap gap-4 reveal delay-750">
+            <button
+              type="button"
+              onClick={scrollToCollections}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-primary rounded-full font-medium hover:bg-accent transition-all hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-secondary/40"
+            >
               Koleksiyonları Gör
-              <Icon name="ArrowRightIcon" size={20} />
-            </Link>
-            <a
-              href="tel:+904543112233"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-medium hover:bg-white/20 transition-all">
+              <Icon name="ArrowDownIcon" size={20} />
+            </button>
 
-              <Icon name="PhoneIcon" size={20} />
-              Bizi Arayın
-            </a>
             <a
-              href="https://www.google.com/maps/dir/?api=1&destination=Nazar+Kuyumculuk+Görele"
+              href={directionsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-medium hover:bg-white/20 transition-all">
-
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-medium hover:bg-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
+            >
               <Icon name="MapPinIcon" size={20} />
               Yol Tarifi Al
             </a>
           </div>
+
+          {/* Mobile quick call */}
+          <div className="mt-6 reveal delay-800">
+            <a
+              href={phoneHref}
+              className="inline-flex md:hidden items-center gap-2 text-white/90 hover:text-white transition-colors"
+            >
+              <Icon name="PhoneIcon" size={18} />
+              Hemen Ara: {phoneDisplay}
+            </a>
+          </div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
